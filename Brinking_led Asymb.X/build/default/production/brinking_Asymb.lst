@@ -1,0 +1,108 @@
+MPASM 5.82                BRINKING_ASYMB.ASM   8-1-2021  20:24:22         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  00000003            00001 STATUS equ 03h ;for selecting bank
+Warning[207]: Found label after column 1. (RP0)
+  00000005            00002     RP0 equ 05
+Warning[207]: Found label after column 1. (RP1)
+  00000006            00003     RP1 equ 06
+Warning[207]: Found label after column 1. (PORTA)
+  00000005            00004  PORTA equ 05h ;BANK0
+Warning[207]: Found label after column 1. (TRISA)
+  00000085            00005  TRISA equ 85h ;BANK1
+                      00006  
+                      00007  
+Warning[207]: Found label after column 1. (COUNTER)
+  00000020            00008  COUNTER equ 20h  ;The counter for our delay loop
+                      00009  
+                      00010   
+                      00011     org 00h ;The program start from here
+                      00012  
+0000   0103           00013     clrw ;clear w register 
+                      00014  
+                      00015  ; selecting BANK0  
+                      00016  
+0001   1283           00017     BCF STATUS, RP0 ;RP0=0
+0002   1303           00018     BCF STATUS, RP1 ;RP1=0
+                      00019    
+0003   0185           00020     CLRF PORTA ;Initialize PORTA
+                      00021  
+                      00022  ;Switch to bank 1 for TRISA register 
+                      00023  
+0004   1683           00024     BSF STATUS, RP0; RP0=1
+                      00025 
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0005   0185           00026     CLRF TRISA
+                      00027     
+0006   3000           00028     MOVLW 0x00  ;clear w register
+                      00029  
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0007   0085           00030     MOVWF TRISA ; set PORTA as output
+                      00031  
+                      00032  ;back to Bank0 for working with PORTA
+                      00033  
+0008   1283           00034     BCF STATUS, RP0 ;RP0=0
+0009   1303           00035     BCF STATUS, RP1 ;RP1=0
+                      00036  
+                      00037  
+Warning[207]: Found label after column 1. (START)
+000A   3001           00038  START  MOVLW 0x01
+000B   0085           00039         MOVWF PORTA ;Turn ON pin 1 on PORTA
+                      00040         ;delay
+000C   30FF           00041         MOVLW 0xff
+000D   00A0           00042         MOVWF COUNTER ;set counter 
+                      00043 
+000E   0BA0           00044 LOOP1   DECFSZ COUNTER, 1 ;substract by 1,until 0
+000F   2???           00045         GOTO LOOP1
+MPASM 5.82                BRINKING_ASYMB.ASM   8-1-2021  20:24:22         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0010   3002           00046         MOVLW 0x02
+0011   0085           00047         MOVWF PORTA  ;Turn on pin 2 on PORTA
+                      00048         ;delay
+0012   30FF           00049         MOVLW 0xff 
+0013   00A0           00050         MOVWF COUNTER  ;Set Counter to 0xFF
+                      00051         
+0014   0BA0           00052 LOOP2   DECFSZ COUNTER, 1 ;substract by 1,until 0
+0015   2???           00053         GOTO LOOP2           
+0016   3004           00054         MOVLW 0x04
+0017   0085           00055         MOVWF PORTA  ;Turn on pin 3 on PORTA
+                      00056         ;delay
+0018   30FF           00057         MOVLW 0xff 
+0019   00A0           00058         MOVWF COUNTER  ;Set Counter to 0xFF
+                      00059         
+001A   0BA0           00060 LOOP3   DECFSZ COUNTER, 1 ;substract by 1,until 0
+001B   2???           00061         GOTO LOOP3
+                      00062         
+001C   2???           00063         GOTO START 
+Warning[205]: Found directive in column 1. (END)
+                      00064 END 
+MPASM 5.82                BRINKING_ASYMB.ASM   8-1-2021  20:24:22         PAGE  3
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+COUNTER                           00000020
+LOOP1                             0000000E
+LOOP2                             00000014
+LOOP3                             0000001A
+PORTA                             00000005
+RP0                               00000005
+RP1                               00000006
+START                             0000000A
+STATUS                            00000003
+TRISA                             00000085
+__16F877A                         00000001
+
+Errors   :     0
+Warnings :     7 reported,     0 suppressed
+Messages :     2 reported,     0 suppressed
+
+
